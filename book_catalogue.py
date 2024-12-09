@@ -7,7 +7,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Database Model
+
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
@@ -15,7 +15,7 @@ class Book(db.Model):
     page_count = db.Column(db.Integer)
     average_rating = db.Column(db.Float)
 
-# Function to fetch book details from Google Books API
+
 def fetch_book_by_isbn(isbn):
     url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
     response = requests.get(url)
@@ -34,15 +34,15 @@ def fetch_book_by_isbn(isbn):
     else:
         return {"error": "API Error"}
 
-# Route for the homepage
+
 @app.route("/")
 def index():
     books = Book.query.all()
-    print(f"Books: {books}")  # Debugging line to see if books are being fetched from the database
+    print(f"Books: {books}")  
     return render_template("index.html", books=books)
 
 
-# Route to add a book by ISBN
+
 @app.route("/add", methods=["POST"])
 def add_book():
     isbn = request.form.get("isbn")
@@ -58,7 +58,7 @@ def add_book():
         db.session.commit()
     return redirect(url_for("index"))
 
-# Route to delete a book by ID
+
 @app.route("/delete/<int:book_id>", methods=["POST"])
 def delete_book(book_id):
     book = Book.query.get(book_id)
@@ -71,7 +71,7 @@ def delete_book(book_id):
 def test():
     return "Flask is working!"
 
-# Initialize the database and run the app
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
