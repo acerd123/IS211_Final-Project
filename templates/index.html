@@ -4,31 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Catalogue</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 10px 0; }
-        form { display: inline; }
-    </style>
 </head>
 <body>
-    <h1>My Book Catalogue</h1>
-    <form method="POST" action="/add">
-        <input type="text" name="isbn" placeholder="Enter ISBN" required>
+    <h1>Book Catalogue</h1>
+
+    <!-- Form to add a book by ISBN -->
+    <form action="{{ url_for('add_book') }}" method="post">
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" required>
         <button type="submit">Add Book</button>
     </form>
+
+    <!-- Display any error message -->
+    {% if request.args.get('error') %}
+        <p style="color:red;">{{ request.args.get('error') }}</p>
+    {% endif %}
+
+    <h2>Books in Catalogue</h2>
     <ul>
         {% for book in books %}
-            <li>
-                <strong>{{ book.title }}</strong> by {{ book.author }}
-                (Pages: {{ book.page_count }}, Rating: {{ book.average_rating }})
-                <form method="POST" action="/delete/{{ book.id }}">
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
-        {% else %}
-            <li>No books found.</li>
+        <li>
+            <strong>{{ book.title }}</strong> by {{ book.author }} <br>
+            Pages: {{ book.page_count if book.page_count != 'Unknown' else 'N/A' }} <br>
+            Rating: {{ '{:.1f}'.format(book.average_rating) if book.average_rating != 'No Rating' else 'N/A' }} <br>
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
         {% endfor %}
     </ul>
 </body>
 </html>
+
