@@ -8,14 +8,14 @@
 <body>
     <h1>Book Catalogue</h1>
 
-    <!-- Form to add a book by ISBN -->
+    
     <form action="{{ url_for('add_book') }}" method="post">
         <label for="isbn">ISBN:</label>
         <input type="text" id="isbn" name="isbn" required>
         <button type="submit">Add Book</button>
     </form>
 
-    <!-- Display any error message -->
+    
     {% if request.args.get('error') %}
         <p style="color:red;">{{ request.args.get('error') }}</p>
     {% endif %}
